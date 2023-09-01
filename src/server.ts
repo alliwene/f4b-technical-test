@@ -1,17 +1,17 @@
 import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
-import morgan from "morgan";
+import morgan from 'morgan';
 
-import { errorHandlerMiddleware } from './infrastructure/common/middleware';
-import { accountRouter } from './application/account/routes/accountRoutes';
+import { errorHandlerMiddleware } from './adapters/middleware';
+import { accountRouter } from './adapters/routes/accountRoutes';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('tiny'))
+app.use(morgan('tiny'));
 
 app.use('/apiv1/account', accountRouter);
 

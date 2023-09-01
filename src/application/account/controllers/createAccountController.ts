@@ -1,7 +1,7 @@
 import { inject, singleton } from 'tsyringe';
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateAccountService } from '../services/createAccountService';
+import { CreateAccountService } from '../services';
 import { CreateAccountDto } from '../dtos';
 import { IAccount } from '../../../domain/entitities/account';
 

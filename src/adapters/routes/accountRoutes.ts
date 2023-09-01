@@ -5,9 +5,12 @@ import {
   CreateAccountController,
   GetAccountsController,
   GetByAccountNumberController,
-} from '../controllers';
-import { CreateAccountDto, GetByAccountNumberDto } from '../dtos';
-import { validationMiddleware } from '../../../infrastructure/common/middleware';
+} from '../../application/account/controllers';
+import {
+  CreateAccountDto,
+  GetByAccountNumberDto,
+} from '../../application/account/dtos';
+import { validationMiddleware } from '../middleware';
 import '../depency-injection/accountContainer';
 
 export const accountRouter = Router();

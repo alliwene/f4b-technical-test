@@ -1,12 +1,12 @@
 import { container } from 'tsyringe';
 
-import { IAccountRepository } from '../../../domain/repositories';
-import { AccountRepository } from '../../../infrastructure/persistence/repositories/accountRepository';
+import { IAccountRepository } from '../../domain/repositories';
+import { AccountRepository } from '../../infrastructure/persistence/repositories/accountRepository';
 import {
   CreateAccountService,
   GetAccountsService,
   GetByAccountNumberService,
-} from '../services';
+} from '../../application/account/services';
 
 container.registerSingleton<IAccountRepository>(
   'IAccountRepository',
