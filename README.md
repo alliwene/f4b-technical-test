@@ -4,9 +4,7 @@
 
 Requirements: [NodeJS](https://nodejs.org/en)
 
-### Steps to run the project locally
-
-1. Setup DB_URI environment variable.
+### Steps to run the project local
 
 1. `npm install`
 
