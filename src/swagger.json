@@ -1,0 +1,216 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"AccountType": {
+				"enum": [
+					"savings",
+					"current",
+					"checking"
+				],
+				"type": "string"
+			},
+			"CreateAccountDto": {
+				"properties": {
+					"firstName": {
+						"type": "string",
+						"description": "User first name"
+					},
+					"lastName": {
+						"type": "string",
+						"description": "User last name"
+					},
+					"dob": {
+						"type": "string",
+						"format": "date-time",
+						"description": "User DOB"
+					},
+					"accountType": {
+						"$ref": "#/components/schemas/AccountType",
+						"description": "Account type"
+					},
+					"initialBalance": {
+						"type": "number",
+						"format": "double",
+						"description": "Initial account balance",
+						"example": 1000
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"dob",
+					"accountType",
+					"initialBalance"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IAccount": {
+				"properties": {
+					"accountNumber": {
+						"type": "number",
+						"format": "double"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"dob": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"accountType": {
+						"$ref": "#/components/schemas/AccountType"
+					},
+					"initialBalance": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"accountNumber",
+					"firstName",
+					"lastName",
+					"dob",
+					"accountType",
+					"initialBalance"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "f4b-technical-test",
+		"version": "1.0.0",
+		"description": "Flutterwave - Technical Assessment",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/account": {
+			"post": {
+				"operationId": "Handle",
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"balance": {
+											"type": "number",
+											"format": "double"
+										},
+										"accountType": {
+											"$ref": "#/components/schemas/AccountType"
+										},
+										"name": {
+											"type": "string"
+										},
+										"accountNumber": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"balance",
+										"accountType",
+										"name",
+										"accountNumber"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": ""
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAccountDto"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "Handle",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IAccount"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/account/{accountNumber}": {
+			"get": {
+				"operationId": "Handle",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAccount"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Account number must be 10 digits"
+					},
+					"404": {
+						"description": "Account not found"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "accountNumber",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

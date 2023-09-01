@@ -1,5 +1,6 @@
 import { container } from 'tsyringe';
 import { Router, Request, Response, NextFunction } from 'express';
+import { plainToClass } from 'class-transformer';
 
 import {
   CreateAccountController,
@@ -24,22 +25,52 @@ const getByAccountNumberController = container.resolve(
 accountRouter.post(
   '/',
   validationMiddleware(CreateAccountDto, 'body'),
-  (request: Request, response: Response, next: NextFunction) => {
-    createAccountController.handle(request, response, next);
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const { firstName, lastName, dob, accountType, initialBalance } =
+        request.body as CreateAccountDto;
+      const account = await createAccountController.handle({
+        firstName,
+        lastName,
+        dob,
+        accountType,
+        initialBalance,
+      });
+
+      response.status(201).send(account);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 accountRouter.get(
   '/',
-  (request: Request, response: Response, next: NextFunction) => {
-    getAccountsController.handle(request, response, next);
+  async (_request: Request, response: Response, next: NextFunction) => {
+    getAccountsController.handle();
+    try {
+      const accounts = await getAccountsController.handle();
+      response.send(accounts);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 accountRouter.get(
   '/:accountNumber',
   validationMiddleware(GetByAccountNumberDto, 'params'),
-  (request: Request, response: Response, next: NextFunction) => {
-    getByAccountNumberController.handle(request, response, next);
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const { accountNumber } = plainToClass(GetByAccountNumberDto, {
+        accountNumber: request.params.accountNumber,
+      });
+
+      const account = await getByAccountNumberController.handle(accountNumber);
+
+      response.send(account);
+    } catch (error) {
+      next(error);
+    }
   },
 );

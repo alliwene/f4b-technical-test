@@ -1,8 +1,9 @@
 import { inject, singleton } from 'tsyringe';
-import { NextFunction, Request, Response } from 'express';
+import { Get, Route } from 'tsoa';
 
 import { GetAccountsService } from '../services';
 
+@Route('account')
 @singleton()
 export class GetAccountsController {
   constructor(
@@ -10,12 +11,9 @@ export class GetAccountsController {
     private getAccountsService: GetAccountsService,
   ) {}
 
-  async handle(_request: Request, response: Response, next: NextFunction) {
-    try {
-      const accounts = await this.getAccountsService.execute();
-      response.json(accounts);
-    } catch (error) {
-      next(error);
-    }
+  @Get('/')
+  async handle() {
+    const accounts = await this.getAccountsService.execute();
+    return accounts;
   }
 }

@@ -1,10 +1,11 @@
 import { inject, singleton } from 'tsyringe';
-import { NextFunction, Request, Response } from 'express';
+import { Body, Post, Route, SuccessResponse, Response } from 'tsoa';
 
 import { CreateAccountService } from '../services';
 import { CreateAccountDto } from '../dtos';
 import { IAccount } from '../../../domain/entitities/account';
 
+@Route('account')
 @singleton()
 export class CreateAccountController {
   constructor(
@@ -12,27 +13,26 @@ export class CreateAccountController {
     private createAccountService: CreateAccountService,
   ) {}
 
-  async handle(request: Request, response: Response, next: NextFunction) {
-    try {
-      const { firstName, lastName, dob, accountType, initialBalance } =
-        request.body as CreateAccountDto;
+  @Response(401)
+  @SuccessResponse(201)
+  @Post('/')
+  async handle(
+    @Body()
+    { firstName, lastName, dob, accountType, initialBalance }: CreateAccountDto,
+  ) {
+    const accountNumber = await this.createAccountService.execute({
+      firstName,
+      lastName,
+      dob,
+      accountType,
+      initialBalance,
+    } as IAccount);
 
-      const accountNumber = await this.createAccountService.execute({
-        firstName,
-        lastName,
-        dob,
-        accountType,
-        initialBalance,
-      } as IAccount);
-
-      response.status(201).send({
-        accountNumber,
-        name: `${firstName} ${lastName}`,
-        accountType,
-        balance: Number(initialBalance),
-      });
-    } catch (error) {
-      next(error);
-    }
+    return {
+      accountNumber,
+      name: `${firstName} ${lastName}`,
+      accountType,
+      balance: Number(initialBalance),
+    };
   }
 }

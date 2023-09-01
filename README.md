@@ -14,6 +14,14 @@ Requirements: [NodeJS](https://nodejs.org/en)
 
 1. `npm run dev` - To run in development mode
 
+### Swagger
+
+Swagger docs can be found at <http://localhost:3000/docs> when the app is running.
+
+### Unit tests
+
+- `npm run test`
+
 ## API
 
 The server will listen on port `3000`, and it exposes the following APIs:

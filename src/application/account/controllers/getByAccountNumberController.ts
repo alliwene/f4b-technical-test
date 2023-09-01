@@ -1,10 +1,9 @@
 import { inject, singleton } from 'tsyringe';
-import { NextFunction, Request, Response } from 'express';
-import { plainToClass } from 'class-transformer';
+import { Get, Path, Response, Route } from 'tsoa';
 
 import { GetByAccountNumberService } from '../services';
-import { GetByAccountNumberDto } from '../dtos';
 
+@Route('account')
 @singleton()
 export class GetByAccountNumberController {
   constructor(
@@ -12,20 +11,14 @@ export class GetByAccountNumberController {
     private getByAccountNumberService: GetByAccountNumberService,
   ) {}
 
-  async handle(request: Request, response: Response, next: NextFunction) {
-    try {
-      //   const accountNumber = request.params.accountNumber;
-      const { accountNumber } = plainToClass(GetByAccountNumberDto, {
-        accountNumber: request.params.accountNumber,
-      });
+  @Response(400, 'Account number must be 10 digits')
+  @Response(404, 'Account not found')
+  @Get('/:accountNumber')
+  async handle(@Path('accountNumber') accountNumber: string) {
+    const account = await this.getByAccountNumberService.execute(
+      Number(accountNumber),
+    );
 
-      const account = await this.getByAccountNumberService.execute(
-        Number(accountNumber),
-      );
-
-      response.send(account);
-    } catch (error) {
-      next(error);
-    }
+    return account;
   }
 }
